@@ -80,8 +80,8 @@
 		D51D4B8017CD2E47008EC9B4 /* InvadersTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InvadersTests.m; sourceTree = "<group>"; };
 		D51D4B8A17CD2EA8008EC9B4 /* GLController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLController.h; sourceTree = "<group>"; };
 		D51D4B8B17CD2EA8008EC9B4 /* GLController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLController.m; sourceTree = "<group>"; };
-		D51D4B8D17CD2EDA008EC9B4 /* gluLookAt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gluLookAt.h; sourceTree = "<group>"; };
-		D51D4B8E17CD2EDA008EC9B4 /* gluLookAt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gluLookAt.m; sourceTree = "<group>"; };
+		D51D4B8D17CD2EDA008EC9B4 /* gluLookAt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gluLookAt.h; path = Invaders/gluLookAt.h; sourceTree = "<group>"; };
+		D51D4B8E17CD2EDA008EC9B4 /* gluLookAt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = gluLookAt.m; path = Invaders/gluLookAt.m; sourceTree = "<group>"; };
 		D51D4B8F17CD2EDA008EC9B4 /* Line.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Line.h; sourceTree = "<group>"; };
 		D51D4B9017CD2EDA008EC9B4 /* Line.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Line.m; sourceTree = "<group>"; };
 		D51D4B9117CD2EDA008EC9B4 /* Parabola.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Parabola.h; sourceTree = "<group>"; };
@@ -159,6 +159,8 @@
 		D51D4B5117CD2E47008EC9B4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D51D4B8D17CD2EDA008EC9B4 /* gluLookAt.h */,
+				D51D4B8E17CD2EDA008EC9B4 /* gluLookAt.m */,
 				D51D4BA417CD2F4A008EC9B4 /* CoreMotion.framework */,
 				D51D4BA517CD2F4A008EC9B4 /* GLKit.framework */,
 				D51D4BA617CD2F4A008EC9B4 /* OpenGLES.framework */,
@@ -194,8 +196,6 @@
 		D51D4B5917CD2E47008EC9B4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				D51D4B8D17CD2EDA008EC9B4 /* gluLookAt.h */,
-				D51D4B8E17CD2EDA008EC9B4 /* gluLookAt.m */,
 				D51D4B5A17CD2E47008EC9B4 /* Invaders-Info.plist */,
 				D51D4B5B17CD2E47008EC9B4 /* InfoPlist.strings */,
 				D51D4B5E17CD2E47008EC9B4 /* main.m */,

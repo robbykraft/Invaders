@@ -22,7 +22,12 @@
 }
 
 -(id) init{
-    return [self initWithWorld:@"park"];
+    return [self initWithWorld:@"park.jpg"];
+}
+
+-(void)swapWorldTexture:(NSString*)textureFile{
+    NSLog(@"Now Entering %@",textureFile);
+    [m_CelestialSphere swapTexture:textureFile];
 }
 
 -(void)initGeometry{
@@ -53,13 +58,10 @@
     if(pitchrad > M_PI*.5 && pitchrad < M_PI*3/2.0){
         tanpitchrad = tanf(pitchrad);
         yawrad -= M_PI;
-        switchFlag = true;
     }
-    else{
+    else
         tanpitchrad = -tanf(pitchrad);
-        switchFlag = false;
-    }
-
+    
     GLfloat origin[4] = {0.0,0.0,0.0,1.0};
 
     glMatrixMode(GL_PROJECTION);
@@ -73,7 +75,7 @@
     //              sinf(rollrad)*sinf(yawrad),1*cosf(rollrad),sinf(rollrad)*cosf(yawrad));
     //              -sinf(rollrad)*sinf(pitchrad), cosf(rollrad), -sinf(rollrad)*cosf(pitchrad));
     
-    glTranslatef(-m_Eyeposition[X_VALUE], -m_Eyeposition[Y_VALUE], -m_Eyeposition[Z_VALUE]);
+//    glTranslatef(-m_Eyeposition[X_VALUE], -m_Eyeposition[Y_VALUE], -m_Eyeposition[Z_VALUE]);
     glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, white);
     
     [self executeSphere:m_CelestialSphere inverted:YES];
@@ -155,7 +157,6 @@
     }
     if(alive)
         [self performSelector:@selector(incrementLine:) withObject:[NSNumber numberWithInteger:[count integerValue]+1] afterDelay:1.0/60];
-    
 }
 
 
@@ -163,13 +164,6 @@
     Square *dust = [[Square alloc] initWithSize:0.03];
     [dust setPositionX:x+arc4random()%100/1000.0-.05 Y:y+arc4random()%100/1000.0-.05 Z:z+arc4random()%100/1000.0-.05];
     return dust;
-}
-
--(void) report{
-    NSLog(@"%d [%.3f  %.3f  %.3f  %.3f]",switchFlag,eyeMatrix.m00, eyeMatrix.m10, eyeMatrix.m20, eyeMatrix.m30);
-    NSLog(@"%d [%.3f  %.3f  %.3f  %.3f]",switchFlag,eyeMatrix.m01, eyeMatrix.m11, eyeMatrix.m21, eyeMatrix.m31);
-    NSLog(@"%d [%.3f  %.3f  %.3f  %.3f]",switchFlag,eyeMatrix.m02, eyeMatrix.m12, eyeMatrix.m22, eyeMatrix.m32);
-    NSLog(@"%d [%.3f  %.3f  %.3f  %.3f]",switchFlag,eyeMatrix.m03, eyeMatrix.m13, eyeMatrix.m23, eyeMatrix.m33);
 }
 
 -(void)executeSphere:(Sphere *)sphere inverted:(BOOL)inverted{

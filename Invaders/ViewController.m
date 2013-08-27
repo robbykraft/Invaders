@@ -31,18 +31,16 @@
     UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHandler:)];
     [self.view addGestureRecognizer:swipeGesture];
     
+    UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchHandler:)];
+    [self.view addGestureRecognizer:pinchGesture];
+    
     glController = [[GLController alloc] initWithWorld:[textures objectAtIndex:arc4random()%[textures count]]];
     
-    // init lighting
-    //    glShadeModel(GL_SMOOTH);
-    //    glLightModelf(GL_LIGHT_MODEL_TWO_SIDE,0.0);
-    //    glEnable(GL_LIGHTING);
     [self initLighting];
     
     ///////////////////////////////////////////////////////////////////////////////
     glMatrixMode(GL_PROJECTION);    // the frustum affects the projection matrix
     glLoadIdentity();               // not the model matrix
-    float aspectRatio;
     if(self.interfaceOrientation == 3 || self.interfaceOrientation == 4)
         aspectRatio = (float)[[UIScreen mainScreen] bounds].size.height / (float)[[UIScreen mainScreen] bounds].size.width;
     else
@@ -69,7 +67,6 @@
             clock++;
             if(clock >= 15){
                 clock = 0;
-                //                [glController report];
                 NSLog(@"++++++++++++++++++++++++++++++++++++++++");
                 NSLog(@"(PITCH:%.2f   ROLL:%.2f   YAW:%.2f)",(attitude.roll+M_PI/2.0)*180/M_PI, attitude.pitch*180/M_PI, (-attitude.yaw)*180/M_PI);
                 NSLog(@"----------------------------------------");
@@ -152,6 +149,28 @@
 
 -(void)swipeHandler:(UISwipeGestureRecognizer*)sender{
     //    glController = [[GLController alloc] initWithWorld:[textures objectAtIndex:arc4random()%[textures count]]];
+}
+
+-(void)pinchHandler:(UIPinchGestureRecognizer*)sender{
+    if([sender state] == 2){
+        glMatrixMode(GL_PROJECTION);
+        glPushMatrix();
+        glLoadIdentity();
+        GLfloat fov = 60 /( lastPinchScale * [sender scale]);
+        if(fov < 45) fov = 45;
+        if(fov > 120) fov = 120;
+        float zNear = 0.1;
+        float zFar = 1000;
+        GLfloat frustum = zNear * tanf(GLKMathDegreesToRadians(fov) / 2.0);
+        glFrustumf(-frustum, frustum, -frustum/aspectRatio, frustum/aspectRatio, zNear, zFar);
+        glMatrixMode(GL_MODELVIEW);
+        glPopMatrix();
+    }
+    else if([sender state] == 3){
+        lastPinchScale *= [sender scale];
+        if(lastPinchScale < .5) lastPinchScale = .5;
+        if(lastPinchScale > 1.333333) lastPinchScale = 1.333333;
+    }
 }
 
 - (void)didReceiveMemoryWarning

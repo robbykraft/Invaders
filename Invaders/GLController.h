@@ -24,8 +24,6 @@
     GLfloat m_Eyeposition[3];
     GLfloat m_Eyerotation[3];
     GLfloat m_EyeInterpolationVector[3];
-    GLKMatrix4 eyeMatrix;
-    BOOL switchFlag;
     NSMutableArray *lines;
     NSMutableArray *parabolae;
 }
@@ -40,7 +38,5 @@
 -(void) rainbowIncoming;
 -(void) lineIncoming;
 -(void) parabolaIncoming;
-
--(void) report;
 
 @end
