@@ -7,7 +7,23 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <GLKit/GLKit.h>
+#import <OpenGLES/ES1/gl.h>
+#import <CoreMotion/CoreMotion.h>
+#import "GLController.h"
 
-@interface ViewController : UIViewController
+#define SS_SUNLIGHT GL_LIGHT0
+#define SS_FILLLIGHT1 GL_LIGHT1
+#define SS_FILLLIGHT2 GL_LIGHT2
+
+@interface ViewController : GLKViewController{
+    GLController *glController;
+    CMMotionManager *motionManager;
+    NSArray *textures;
+    CADisplayLink *displayLink;
+    NSInteger clock;
+}
+@property (strong,nonatomic) EAGLContext *context;
+@property (strong,nonatomic) GLKBaseEffect *effect;
 
 @end
