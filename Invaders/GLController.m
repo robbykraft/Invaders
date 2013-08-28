@@ -46,9 +46,9 @@
     GLfloat white[] = {1.0,1.0,1.0,1.0};
     GLfloat black[] = {0.0,0.0,0.0,0.0};
     
-    double yawrad = (M_PI*m_Eyerotation[Y_VALUE])/180;
-    double pitchrad = (M_PI*m_Eyerotation[X_VALUE])/180;
-    double rollrad = M_PI*m_Eyerotation[Z_VALUE]/180;
+    double yawrad = (M_PI*m_Eyerotation[Y_VALUE])/180.0;
+    double pitchrad = (M_PI*m_Eyerotation[X_VALUE])/180.0;
+    double rollrad = M_PI*m_Eyerotation[Z_VALUE]/180.0;
     
     double tanpitchrad;
     if(pitchrad>M_PI*2)
@@ -64,40 +64,40 @@
     
     GLfloat origin[4] = {0.0,0.0,0.0,1.0};
 
-    glMatrixMode(GL_PROJECTION);
+    
+    glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
 
     gluLookAt(m_Eyeposition[X_VALUE], m_Eyeposition[Y_VALUE], m_Eyeposition[Z_VALUE],
               -sinf(yawrad), tanpitchrad, cosf(yawrad),
               cosf(yawrad)*( -sinf(rollrad)/fabsf(1/cosf(pitchrad)) ),cosf(rollrad)*1/cosf(pitchrad), sinf(yawrad)*( -sinf(rollrad)/fabsf(1/cosf(pitchrad)) ) );
-    //              -sinf(rollrad),cosf(rollrad)*1/cosf(pitchrad),0);   // FIRST moment I was doing this right, only rolls if pointed along the +x axis instead of the z, or -x.
-    //              -sinf(rollrad),-1*((switchFlag*2)-1)*cosf(rollrad),0);
-    //              sinf(rollrad)*sinf(yawrad),1*cosf(rollrad),sinf(rollrad)*cosf(yawrad));
-    //              -sinf(rollrad)*sinf(pitchrad), cosf(rollrad), -sinf(rollrad)*cosf(pitchrad));
     
 //    glTranslatef(-m_Eyeposition[X_VALUE], -m_Eyeposition[Y_VALUE], -m_Eyeposition[Z_VALUE]);
     glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, white);
     
     [self executeSphere:m_CelestialSphere inverted:YES];
-    glPopMatrix();
+    //glPopMatrix();
     
-    glMatrixMode(GL_MODELVIEW);
+    //glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
-    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, black);
-    glLightfv(GL_LIGHT0, GL_POSITION, origin);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, white);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);  //Still effects things after glPushMatrix
     
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, white);
+    for(Line *line in lines){
+        [self executeSquare:[line square]];
+    }
+
     for(Parabola *parabola in parabolae){
         [self executeSphere:[parabola sphere] inverted:NO];
         for(Square *dust in [parabola particleTrail])
             [self executeSquare:dust];
     }
-    for(Line *line in lines){
-        [self executeSquare:[line square]];
-    }
-    glMatrixMode(GL_PROJECTION);
+
     glPopMatrix();
+    glPopMatrix();
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, black);
+    glLightfv(GL_LIGHT0, GL_POSITION, origin);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, white);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);  //Still effects things after glPushMatrix
 }
 
 #pragma mark- target objects
@@ -135,7 +135,8 @@
 -(void) lineIncoming{
     Line *line = [[Line alloc] init];
     [line setDistance:8];
-    [line setAngle:arc4random()%628318/100000.0];
+    [line setAngle:0.0];
+//    [line setAngle:arc4random()%628318/100000.0];
     NSLog(@"Line Incoming ANGLE: %f",[line angle]);
     [line setPositionX:[line distance]*sinf([line angle]) Y:0 Z:[line distance]*cosf([line angle])];
     [lines addObject:line];
@@ -158,7 +159,6 @@
     if(alive)
         [self performSelector:@selector(incrementLine:) withObject:[NSNumber numberWithInteger:[count integerValue]+1] afterDelay:1.0/60];
 }
-
 
 -(Square*)targetMakeCloudX:(GLfloat)x Y:(GLfloat)y Z:(GLfloat)z{
     Square *dust = [[Square alloc] initWithSize:0.03];

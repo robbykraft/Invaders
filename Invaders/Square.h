@@ -20,5 +20,6 @@
 -(NSInteger) getAlpha;
 
 -(void)swapTexture:(NSString*)textureFile;
+-(GLKTextureInfo *)loadTexture:(NSString*)fileName;
 
 @end

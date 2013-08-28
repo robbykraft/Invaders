@@ -19,8 +19,7 @@
 @interface ViewController : GLKViewController{
     GLController *glController;
     CMMotionManager *motionManager;
-    NSArray *textures;
-    CADisplayLink *displayLink;
+    NSArray *worldTextures;
     NSInteger clock;
     CGFloat aspectRatio;
     CGFloat lastPinchScale;

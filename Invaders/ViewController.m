@@ -17,9 +17,9 @@
 {
     [super viewDidLoad];
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-        textures = [NSArray arrayWithObjects:@"narthex.png", nil];
+        worldTextures = [NSArray arrayWithObjects:@"narthex.png", nil];
     else
-        textures = [NSArray arrayWithObjects:@"park.jpg", @"marsh.jpg", nil];//@"narthex.png", @"cave.jpg", @"station.jpg", @"snow_small.jpg", @"office.jpg", nil];
+        worldTextures = [NSArray arrayWithObjects:@"park.jpg", @"marsh.jpg", nil];//@"narthex.png", @"cave.jpg", @"station.jpg", @"snow_small.jpg", @"office.jpg", nil];
     
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
     
@@ -33,8 +33,9 @@
     
     UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchHandler:)];
     [self.view addGestureRecognizer:pinchGesture];
+    lastPinchScale = 1.0;
     
-    glController = [[GLController alloc] initWithWorld:[textures objectAtIndex:arc4random()%[textures count]]];
+    glController = [[GLController alloc] initWithWorld:[worldTextures objectAtIndex:arc4random()%[worldTextures count]]];
     
     [self initLighting];
     
@@ -45,11 +46,9 @@
         aspectRatio = (float)[[UIScreen mainScreen] bounds].size.height / (float)[[UIScreen mainScreen] bounds].size.width;
     else
         aspectRatio = (float)[[UIScreen mainScreen] bounds].size.width / (float)[[UIScreen mainScreen] bounds].size.height;
-    int fov = 60;
-    float zNear = 0.1;
-    float zFar = 1000;
-    GLfloat frustum = zNear * tanf(GLKMathDegreesToRadians(fov) / 2.0);
-    glFrustumf(-frustum, frustum, -frustum/aspectRatio, frustum/aspectRatio, zNear, zFar);
+    
+    [self updateFrustrumWithFOV:60];
+    
     glViewport(0, 0, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height);
     ///////////////////////////////////////////////////////////////////////////////
     glEnable(GL_DEPTH_TEST);
@@ -84,19 +83,14 @@
     [glController performSelector:@selector(parabolaIncoming) withObject:Nil afterDelay:105.0];
     
     
-    [glController performSelector:@selector(lineIncoming) withObject:Nil afterDelay:7.0];
-    [glController performSelector:@selector(lineIncoming) withObject:Nil afterDelay:12.0];
-    [glController performSelector:@selector(lineIncoming) withObject:Nil afterDelay:19.0];
-    [glController performSelector:@selector(lineIncoming) withObject:Nil afterDelay:26.0];
-    [glController performSelector:@selector(lineIncoming) withObject:Nil afterDelay:35.0];
-    [glController performSelector:@selector(lineIncoming) withObject:Nil afterDelay:42.0];
-    [glController performSelector:@selector(lineIncoming) withObject:Nil afterDelay:50.0];
-    [glController performSelector:@selector(lineIncoming) withObject:Nil afterDelay:57.0];
-    
-    //    CFAbsoluteTimeGetCurrent();
-    //    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkCalled)];
-    //    [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-    
+    [glController performSelector:@selector(lineIncoming) withObject:Nil afterDelay:3.0];
+    [glController performSelector:@selector(lineIncoming) withObject:Nil afterDelay:10.0];
+    [glController performSelector:@selector(lineIncoming) withObject:Nil afterDelay:17.0];
+    [glController performSelector:@selector(lineIncoming) withObject:Nil afterDelay:24.0];
+    [glController performSelector:@selector(lineIncoming) withObject:Nil afterDelay:31.0];
+    [glController performSelector:@selector(lineIncoming) withObject:Nil afterDelay:38.0];
+    [glController performSelector:@selector(lineIncoming) withObject:Nil afterDelay:45.0];
+    [glController performSelector:@selector(lineIncoming) withObject:Nil afterDelay:52.0];
 }
 
 -(void) initLighting
@@ -139,8 +133,6 @@
     glEnable(SS_FILLLIGHT2);
 }
 
--(void)displayLinkCalled {}
-
 -(void) glkView:(GLKView *)view drawInRect:(CGRect)rect{
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -148,7 +140,14 @@
 }
 
 -(void)swipeHandler:(UISwipeGestureRecognizer*)sender{
-    //    glController = [[GLController alloc] initWithWorld:[textures objectAtIndex:arc4random()%[textures count]]];
+//    glController = [[GLController alloc] initWithWorld:[textures objectAtIndex:arc4random()%[textures count]]];
+}
+
+-(void) updateFrustrumWithFOV:(GLfloat)fov{
+    float zNear = 0.1;
+    float zFar = 1000;
+    GLfloat frustum = zNear * tanf(GLKMathDegreesToRadians(fov) / 2.0);
+    glFrustumf(-frustum, frustum, -frustum/aspectRatio, frustum/aspectRatio, zNear, zFar);
 }
 
 -(void)pinchHandler:(UIPinchGestureRecognizer*)sender{
@@ -159,10 +158,7 @@
         GLfloat fov = 60 /( lastPinchScale * [sender scale]);
         if(fov < 45) fov = 45;
         if(fov > 120) fov = 120;
-        float zNear = 0.1;
-        float zFar = 1000;
-        GLfloat frustum = zNear * tanf(GLKMathDegreesToRadians(fov) / 2.0);
-        glFrustumf(-frustum, frustum, -frustum/aspectRatio, frustum/aspectRatio, zNear, zFar);
+        [self updateFrustrumWithFOV:fov];
         glMatrixMode(GL_MODELVIEW);
         glPopMatrix();
     }
